@@ -177,6 +177,7 @@ fn query(desk: &MyDesk, text: &str, limit: usize) -> Result<Vec<SessionSearchHit
         checkout_id: None,
         providers: vec![],
         limit,
+        roots_only: false,
     })
 }
 
@@ -590,6 +591,7 @@ fn call(desk: &MyDesk, name: &str, args: Value) -> Result<Value> {
                 checkout_id: None,
                 providers: agents,
                 limit: 30,
+                roots_only: false,
             })?;
             let mut remaining = budget;
             let hits: Vec<_> = hits.into_iter().map(|hit| {

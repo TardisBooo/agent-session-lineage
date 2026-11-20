@@ -36,12 +36,11 @@ Claude Code / Codex / OpenCode / Pi / Grok / OMP transcripts
 
 ```powershell
 git clone https://github.com/TardisBooo/mobius-connect.git
-git clone https://github.com/TardisBooo/Mobius.git desktop
 cd mobius-connect
-cargo build --release
+cargo build --release --locked
 ```
 
-Clone [TardisBooo/Mobius](https://github.com/TardisBooo/Mobius) next to this repository as `desktop`. Durable data defaults to local app data (`%LOCALAPPDATA%\Mobius` on Windows, `~/.local/share/mobius` elsewhere). Use `--data-root <dir>` for an isolated test vault.
+Cargo fetches the shared Rust library from the pinned [Möbius revision](https://github.com/TardisBooo/Mobius/tree/b0522c363006fb49a071e1fe5f418e76da365a57). The binary is in `target/release`. Durable data defaults to local app data (`%LOCALAPPDATA%\Mobius` on Windows, `~/.local/share/mobius` elsewhere). Use `--data-root <dir>` for an isolated test vault.
 
 ## Commands
 
@@ -147,12 +146,14 @@ Off by default. `enable` discloses that already-indexed chunks may be sent to **
 mobius-connect handoff prepare --harness claude --cwd . <session-id>
 mobius-connect approvals handoff <handoff-id>
 mobius-connect handoff commit <handoff-id> --approval-token <token>
+mobius-connect sources refresh
 mobius-connect handoff status <handoff-id>
 ```
 
 1. `prepare` builds a **references-only** envelope. It launches nothing.
 2. `approvals handoff` waits for you to type `APPROVE`, then mints a short-lived, single-use token.
-3. `commit` seals the handoff. MCP cannot mint this token.
+3. `commit` requests a new Windows console for the target. MCP cannot mint the approval token.
+4. After the target saves its transcript in an approved root, run `sources refresh` and check `handoff status` with the same vault. A bound operation lists the indexed target session ID.
 
 ### 10. `mcp serve` — stdio for agents
 

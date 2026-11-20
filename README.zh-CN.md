@@ -36,12 +36,11 @@ Claude Code / Codex / OpenCode / Pi / Grok / OMP transcripts
 
 ```powershell
 git clone https://github.com/TardisBooo/mobius-connect.git
-git clone https://github.com/TardisBooo/Mobius.git desktop
 cd mobius-connect
-cargo build --release
+cargo build --release --locked
 ```
 
-把 [TardisBooo/Mobius](https://github.com/TardisBooo/Mobius) 克隆到本仓库旁边，目录名用 `desktop`。持久数据默认写在本机应用数据目录（Windows 为 `%LOCALAPPDATA%\Mobius`，其他平台为 `~/.local/share/mobius`）。隔离测试用 `--data-root <dir>`。
+Cargo 从固定的 [Möbius 提交](https://github.com/TardisBooo/Mobius/tree/b0522c363006fb49a071e1fe5f418e76da365a57) 获取共享 Rust 库。可执行文件在 `target/release`。持久数据默认写在本机应用数据目录（Windows 为 `%LOCALAPPDATA%\Mobius`，其他平台为 `~/.local/share/mobius`）。隔离测试用 `--data-root <dir>`。
 
 ## 命令
 
@@ -147,12 +146,14 @@ mobius-connect semantic disable
 mobius-connect handoff prepare --harness claude --cwd . <session-id>
 mobius-connect approvals handoff <handoff-id>
 mobius-connect handoff commit <handoff-id> --approval-token <token>
+mobius-connect sources refresh
 mobius-connect handoff status <handoff-id>
 ```
 
 1. `prepare` 做一份**只含引用**的信封。它不启动任何东西。
 2. `approvals handoff` 等你输入 `APPROVE`，然后签发短时、一次性令牌。
-3. `commit` 封交接。MCP 不能签发这个令牌。
+3. `commit` 请求在 Windows 新开一个目标终端。令牌由终端中的人工确认签发。
+4. 目标会话将记录写入已批准的目录后，用同一个资料库运行 `sources refresh`，再查看 `handoff status`。绑定完成后会列出目标会话的索引 ID。
 
 ### 10. `mcp serve` — 给 Agent 的 stdio
 

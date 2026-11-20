@@ -471,7 +471,8 @@ dependencies = [
 
 [[package]]
 name = "mydesk-core"
-version = "0.3.19"
+version = "0.3.20"
+source = "git+https://github.com/TardisBooo/Mobius.git?rev=b0522c363006fb49a071e1fe5f418e76da365a57#b0522c363006fb49a071e1fe5f418e76da365a57"
 dependencies = [
  "anyhow",
  "chrono",
