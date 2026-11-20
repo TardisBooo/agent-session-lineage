@@ -1,19 +1,22 @@
 {
   "name": "mobius-connect",
   "version": "0.1.0",
-  "description": "Explicit native-session ancestry and source references, without summaries or automatic memory injection.",
+  "description": "Browse indexed AI coding sessions and inspect recorded session lineage in a local Möbius vault.",
   "author": {
     "name": "Tardis"
   },
+  "repository": "https://github.com/TardisBooo/agent-session-lineage",
+  "license": "MIT",
   "skills": "./skills/",
   "interface": {
-    "displayName": "Mobius Connect",
-    "shortDescription": "Use Mobius Connect in Codex.",
-    "longDescription": "Inspect how work flowed between sessions and resolve original records through the independent mobius-connect MCP server. The model chooses whether and what to read.",
+    "displayName": "Agent Session Lineage",
+    "shortDescription": "Browse indexed coding sessions and their recorded lineage.",
+    "longDescription": "List locally indexed Codex and Claude Code sessions and inspect recorded handoff links. The Windows preview uses the mobius-connect executable and a local Möbius vault.",
     "developerName": "Tardis",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "Help me use Mobius Connect."
+    "defaultPrompt": "Use $mobius-memory to list indexed sessions and show the recorded lineage for the session I select.",
+    "composerIcon": "./assets/icon.png"
   },
   "mcpServers": "./.mcp.json"
 }

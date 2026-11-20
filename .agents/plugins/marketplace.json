@@ -1,0 +1,19 @@
+{
+  "name": "agent-session-lineage",
+  "interface": {
+    "displayName": "Agent Session Lineage"
+  },
+  "plugins": [
+    {
+      "name": "mobius-connect",
+      "source": {
+        "source": "local",
+        "path": "./plugins/mobius-connect"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_USE"
+      }
+    }
+  ]
+}

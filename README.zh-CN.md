@@ -1,23 +1,42 @@
-# mobius-connect
+# Agent Session Lineage
 
-Möbius **Agent 会话层** 的 CLI 与 stdio MCP。
+Agent Session Lineage 是用于查看 AI 编码会话历史的本地 Codex 插件和 CLI。它可以列出已索引的 Codex 和 Claude Code 会话，并查看已经记录的交接关系。
 
-在终端或 MCP 里搜索、引用、画出并交接本地编程 Agent 会话。Harness 文件保持只读。交接携带祖先引用，不生成摘要。
+Windows x64 插件预览版支持索引你选定的日志、列出会话和查看来源图。SQLite 索引保存在本机 Möbius 资料库中。索引器以只读方式打开原始会话文件。
 
 桌面工作台：[TardisBooo/Mobius](https://github.com/TardisBooo/Mobius)。
 
-**数据在你这台机器上。** 索引是本地 SQLite。原始 Codex JSONL、Claude 会话和 OpenCode 的 `opencode.db` 不会被改写。Möbius 不卖模型账号。
-
 [English](README.md) · [产品页](http://8.137.87.76/mobius/?lang=zh) · [MCP](docs/MCP.md) · [桌面 README](https://github.com/TardisBooo/Mobius/blob/main/README.zh-CN.md) · [MIT License](LICENSE)
 
-> 开发预览。原生启动审批和跨 Harness 身份绑定仍是发布门槛。兼容性按 Harness 逐项验证。
+## 在 Windows 上安装 Codex 插件
+
+1. 从 [v0.1.0 预览版](https://github.com/TardisBooo/agent-session-lineage/releases/tag/v0.1.0)下载 `agent-session-lineage-0.1.0-windows-x64.zip` 和 `SHA256SUMS.txt`。用 `Get-FileHash -Algorithm SHA256` 检查压缩包，并与校验文件中的值比对。
+2. 解压到你管理的目录。将 `mobius-connect.exe` 所在目录加入用户 `PATH`。打开新的 PowerShell，用 `Get-Command mobius-connect` 核对程序路径。
+3. 创建本地索引，将下方示例路径换成你要索引的 Codex 会话目录。若要加入 Claude Code 日志，用 `claude` 和对应的 projects 目录再执行一次 `sources add`。
+
+```powershell
+mobius-connect init
+mobius-connect sources add codex 'C:\path\to\codex\sessions'
+mobius-connect sources refresh
+```
+
+4. 从 GitHub 的版本目录安装插件。若你使用桌面版 Codex，更新 `PATH` 后重启应用。
+
+```powershell
+codex plugin marketplace add TardisBooo/agent-session-lineage --ref v0.1.0
+codex plugin add mobius-connect@agent-session-lineage
+```
+
+在新的 Codex 会话中选择 `$mobius-memory`，让它列出已索引的会话。选中一条会话后，再查看来源图。图中显示索引里已记录的关系。
+
+卸载时运行 `codex plugin remove mobius-connect@agent-session-lineage`。
 
 ## 两个仓库，同一产品
 
 | 名称 | 是什么 |
 | --- | --- |
 | **Möbius** | Windows 桌面：会话库、PowerShell 工作台、交接图谱、笔记、画布、技能。[TardisBooo/Mobius](https://github.com/TardisBooo/Mobius) |
-| **mobius-connect** | CLI 与 stdio MCP。本仓库。没有桌面 UI。 |
+| **Agent Session Lineage** | 本仓库，包含 Codex 插件、`mobius-connect` CLI 和 stdio MCP 服务。 |
 
 ```
 Claude Code / Codex / OpenCode / Pi / Grok / OMP transcripts
@@ -32,11 +51,11 @@ Claude Code / Codex / OpenCode / Pi / Grok / OMP transcripts
 
 **CLI 与 MCP：** CLI 给人在终端用（可以让*你*输入 `APPROVE`）；MCP 给 Agent 进程用（可以列元数据，但读 transcript 正文都需要人在终端输入 `APPROVE` 之后签发的令牌）。MCP 不能签发审批令牌、不能添加来源、不能接管 PTY。
 
-## 安装
+## 从源码构建 CLI
 
 ```powershell
-git clone https://github.com/TardisBooo/mobius-connect.git
-cd mobius-connect
+git clone https://github.com/TardisBooo/agent-session-lineage.git
+cd agent-session-lineage
 cargo build --release --locked
 ```
 
@@ -45,6 +64,8 @@ Cargo 从固定的 [Möbius 提交](https://github.com/TardisBooo/Mobius/tree/b0
 ## 命令
 
 每条 GIF 是一段脚本化的终端场景，风格与[桌面产品视频](https://github.com/TardisBooo/Mobius/blob/main/apps/website/public/product/chapters/12-cli.gif)第 12 章相同。演示数据为虚构。
+
+启动新的跨工具交接仍是实验功能。Windows 插件预览版覆盖已记录关系的查看。
 
 ### 1. `init` — 创建本地索引
 

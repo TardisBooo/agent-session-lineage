@@ -1,23 +1,42 @@
-# mobius-connect
+# Agent Session Lineage
 
-CLI and stdio MCP for the Möbius **Agent Session Hub**.
+Agent Session Lineage is a local Codex plugin and CLI for AI coding session history. Browse indexed Codex and Claude Code sessions and inspect the recorded handoff links between them.
 
-Search, cite, graph and hand off local coding-agent sessions from a terminal or over MCP. Harness files stay read-only. A handoff carries ancestry references, not a generated summary.
+The Windows x64 plugin preview covers indexing selected logs, listing sessions, and viewing recorded lineage. The SQLite index lives in the local Möbius vault. The indexer opens the original session files read-only.
 
 Desktop workspace: [TardisBooo/Mobius](https://github.com/TardisBooo/Mobius).
 
-**Yours, on this machine.** The index is local SQLite. Original Codex JSONL, Claude transcripts, and OpenCode `opencode.db` are never rewritten. Möbius does not sell model accounts.
-
 [简体中文](README.zh-CN.md) · [Product site](http://8.137.87.76/mobius/) · [MCP](docs/MCP.md) · [Desktop README](https://github.com/TardisBooo/Mobius/blob/main/README.md) · [MIT License](LICENSE)
 
-> Development preview. Native launch approvals and cross-harness identity binding remain release gates. Compatibility is verified per harness.
+## Install the Codex plugin on Windows
+
+1. Download `agent-session-lineage-0.1.0-windows-x64.zip` and `SHA256SUMS.txt` from the [v0.1.0 preview release](https://github.com/TardisBooo/agent-session-lineage/releases/tag/v0.1.0). Compare the archive's `Get-FileHash -Algorithm SHA256` result with its entry in `SHA256SUMS.txt`.
+2. Extract the archive into a folder you control. Add the folder containing `mobius-connect.exe` to your user `PATH`. Open a new PowerShell window and run `Get-Command mobius-connect` to check the executable path.
+3. Create the index and add a session directory you choose. Replace the example path with your Codex sessions directory. To include Claude Code logs, repeat `sources add` with `claude` and the specific Claude Code projects directory you want to index.
+
+```powershell
+mobius-connect init
+mobius-connect sources add codex 'C:\path\to\codex\sessions'
+mobius-connect sources refresh
+```
+
+4. Install the plugin from the versioned GitHub marketplace. If you run Codex in the desktop app, restart the app after changing `PATH`.
+
+```powershell
+codex plugin marketplace add TardisBooo/agent-session-lineage --ref v0.1.0
+codex plugin add mobius-connect@agent-session-lineage
+```
+
+In a new Codex session, select `$mobius-memory` and ask for indexed sessions. Choose a session and ask for its recorded lineage. The graph shows links already recorded in the index.
+
+Run `codex plugin remove mobius-connect@agent-session-lineage` to remove the plugin.
 
 ## Two repositories, one product
 
 | Name | What it is |
 | --- | --- |
 | **Möbius** | Windows desktop: session library, PowerShell workbench, handoff graph, notes, canvas, skills. [TardisBooo/Mobius](https://github.com/TardisBooo/Mobius) |
-| **mobius-connect** | CLI and stdio MCP. This repository. No desktop UI. |
+| **Agent Session Lineage** | This Codex plugin, the `mobius-connect` CLI, and its stdio MCP server. |
 
 ```
 Claude Code / Codex / OpenCode / Pi / Grok / OMP transcripts
@@ -32,11 +51,11 @@ Claude Code / Codex / OpenCode / Pi / Grok / OMP transcripts
 
 **CLI vs MCP:** the CLI is for a human at a terminal (it can ask *you* to type `APPROVE`); MCP is for an agent process (it can list metadata, but every read of transcript bodies needs a token minted after a human typed `APPROVE`). MCP cannot mint approval tokens, add sources, or attach a PTY.
 
-## Install
+## Build the CLI from source
 
 ```powershell
-git clone https://github.com/TardisBooo/mobius-connect.git
-cd mobius-connect
+git clone https://github.com/TardisBooo/agent-session-lineage.git
+cd agent-session-lineage
 cargo build --release --locked
 ```
 
@@ -45,6 +64,8 @@ Cargo fetches the shared Rust library from the pinned [Möbius revision](https:/
 ## Commands
 
 Each clip is a scripted terminal scene in the same paper/ink style as the [desktop product film](https://github.com/TardisBooo/Mobius/blob/main/apps/website/public/product/chapters/12-cli.gif). Demo data is fictional.
+
+New native handoffs remain experimental. The Windows plugin preview covers viewing recorded links.
 
 ### 1. `init` — create the local index
 
